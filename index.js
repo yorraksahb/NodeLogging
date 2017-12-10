@@ -1,7 +1,6 @@
 var log4js = require('log4js');
 
 var printLogs = function() {
-    console.log('Start');
 
     log4js.configure({
         levels: {
@@ -12,14 +11,18 @@ var printLogs = function() {
                 type: 'console',
                 layout: {
                     type: 'pattern',
-                    pattern: '[%r] [%p] [%c] {%x{body}}%n',
+                    pattern: '%[[%d{ISO8601}] [%p] %c - %x{body} %]%n',
                     tokens: {
-                        body: function() { return process.pid; }
+                        body: function() {
+                            var msg = arguments[0].data[0];
+                            console.log(arguments[0]);
+                            return msg; 
+                          }
                     }
                 }
             }
         },
-        categories: { default: { appenders: ['IPM'], level: 'DEBUG' } }
+        categories: { default: { appenders: ['IPM'], level: 'ERROR' } }
     });
 
     const logger = log4js.getLogger('IPM');
